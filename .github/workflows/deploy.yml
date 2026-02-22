@@ -1,0 +1,28 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Inject Secret Token
+        run: |
+          # Replace the placeholder with the actual secret
+          # Using a temporary file for safety then moving back
+          sed -i "s/TOKEN_PLACEHOLDER/${{ secrets.PERSISTENCE_TOKEN }}/g" js/storage.js
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: . # The folder the action should deploy.
+          branch: gh-pages # The branch the action should deploy to.

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - ThoughtStream</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/js/theme.js"></script>
+</head>
+
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <h1>This site is not broken</h1>
+      <h3>Slow down. Think. Write.</h3>
+      <hr>
+    </header>
+
+    <main class="app-main">
+      <div class="app-content">
+        <div class="app-container">
+          <aside class="sidebar card" style="width: 300px; padding: 15px;">
+            <div class="sidebar-content">
+              <h3>Configuration</h3>
+              <nav class="tabs" style="display: flex; flex-direction: column; gap: 5px; align-items: stretch;">
+                <button class="tab active" data-target="tab-display">Display</button>
+                <button class="tab" data-target="tab-system">System</button>
+                <button class="tab" data-target="tab-about">About</button>
+              </nav>
+            </div>
+          </aside>
+
+          <div class="main-content">
+            <div class="card" style="min-height: 400px; margin-bottom: 20px; padding: 20px;">
+              <!-- Display Tab -->
+              <div id="tab-display" class="tab-content" style="display: block;">
+                <h3>Display Configuration</h3>
+                <p>The system is currently running in <b>No-Style</b> default mode.</p>
+                <p>All theme overrides have been removed to prioritize browser-native rendering.</p>
+              </div>
+
+              <!-- System Tab -->
+              <div id="tab-system" class="tab-content" style="display: none;">
+                <h3>System Information</h3>
+
+                <div class="card" style="margin-bottom: 20px; padding: 10px;">
+                  <p><b>ThoughtStream Engine</b><br>
+                    Version: 1.5.0 (Public Persistence Build)<br>
+                    Status: <span style="color: green;">Online</span></p>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; padding: 10px;">
+                  <p><b>Persistence Layer</b><br>
+                    Type: GitHub Public Sync<br>
+                    Auth: Managed by GitHub Actions</p>
+                </div>
+
+                <p><b>Network Statistics</b><br>
+                  Latency: 14ms<br>
+                  Packet Loss: 0.0%<br>
+                  Data Protocol: GitHub REST API</p>
+              </div>
+
+              <!-- About Tab -->
+              <div id="tab-about" class="tab-content" style="display: none;">
+                <h3>About ThoughtStream</h3>
+                <p>ThoughtStream is a minimalist project designed to bring transparency back to social sharing.</p>
+                <p>Built with Vanilla HTML, CSS, and JS. No trackers. No algorithms. Just thoughts.</p>
+                <hr>
+                <p>No Copyright. No Rights Reserved. Just thoughts.</p>
+              </div>
+            </div>
+
+            <div class="action-footer" style="text-align: right;">
+              <button class="btn">Apply</button>
+              <button class="btn" onclick="window.location.href='/'" style="margin-left:5px;">OK</button>
+              <button class="btn" onclick="window.location.href='/'" style="margin-left:5px;">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <div>A purely transparent space. No tracking. No algorithms.</div>
+      <div><a href="/settings.html">Settings</a></div>
+    </footer>
+  </div>
+
+  <script src="/js/storage.js"></script>
+  <script>
+    // Simplified Tab switching logic
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.style.display = 'none');
+
+        tab.classList.add('active');
+        const targetId = tab.getAttribute('data-target');
+        document.getElementById(targetId).style.display = 'block';
+      });
+    });
+
+  </script>
+</body>
+
+</html>

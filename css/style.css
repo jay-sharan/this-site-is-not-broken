@@ -1,0 +1,153 @@
+/* css/style.css */
+
+/* 
+   CORE LAYOUT ONLY
+   This file contains NO visual styling (colors, fonts, borders).
+   It only defines the fixed-height application shell as requested.
+*/
+
+:root {
+    /* Semantic Variables for future scaling, all set to browser defaults */
+    --app-bg: transparent;
+    --app-text: inherit;
+    --header-bg: transparent;
+    --header-text: inherit;
+    --footer-bg: transparent;
+    --footer-text: inherit;
+    --card-bg: transparent;
+    --card-text: inherit;
+    --btn-bg: initial;
+    --btn-text: initial;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    /* Prevent page-level scroll */
+}
+
+/* 
+   Application Shell: Fixed 100% Height Flexbox 
+*/
+.app-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+}
+
+.app-header {
+    flex: 0 0 auto;
+}
+
+.app-main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.app-footer {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+/* 
+   Content Constraints 
+*/
+.app-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    min-width: 250px;
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.sidebar-capture {
+    flex: 0 0 auto;
+    padding-top: 10px;
+}
+
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 20px;
+}
+
+/* 
+   Semantic Component Placeholders (Layout Only) 
+*/
+.app-container {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    max-width: 1200px;
+    /* Better for sidebar layout than 900px */
+    margin: 0 auto;
+    gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tabs {
+    display: flex;
+}
+
+.tab {
+    cursor: pointer;
+}
+
+/* 
+   Visual reset - stripping all helper decoration that looked like "style"
+*/
+.btn,
+.card,
+.well,
+.tab,
+.sidebar {
+    all: revert;
+    /* Use browser defaults for these elements if they are native */
+}
+
+/* If the elements are divs/sections, we ensure they don't have forced styles */
+.card,
+.sidebar,
+.well {
+    background: var(--card-bg);
+    color: var(--card-text);
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}

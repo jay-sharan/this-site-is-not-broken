@@ -1,0 +1,5 @@
+- name: Procyon
+- who_am_i: The one who comes before the dog. A loyal herald.
+- meaning_of_slowness: It means you don't always have to be the first to arrive.
+- thoughts:
+- t8, 2026-02-21

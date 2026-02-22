@@ -1,0 +1,6 @@
+- name: Capella
+- who_am_i: The little goat star, bright and golden.
+- meaning_of_slowness: Slowing down is resting in the pasture without worrying about tomorrow's mountain.
+- thoughts:
+- t20_3, 2026-02-20
+- t6, 2026-02-21

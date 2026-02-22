@@ -1,0 +1,5 @@
+- name: Rigel
+- who_am_i: The blue supergiant marking the hunter's foot.
+- meaning_of_slowness: Slowing down is knowing that even giants need a moment to stand still.
+- thoughts:
+- t7, 2026-02-21

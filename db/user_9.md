@@ -1,0 +1,5 @@
+- name: Achernar
+- who_am_i: The end of the river.
+- meaning_of_slowness: Slowing down is realizing that all rivers eventually reach a quiet ocean.
+- thoughts:
+- t9, 2026-02-21

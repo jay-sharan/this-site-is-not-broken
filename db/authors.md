@@ -1,4 +1,4 @@
-count: 10
+count: 11
 users:
   - user_1 | Sirius | The brightest star in the night sky. I shine steady. | Slowing down is not burning out before my time.
   - user_2 | Canopus | Navigator of the southern seas. Constant and reliable. | Slowing down means finding the true north instead of rushing blindly.
@@ -10,3 +10,4 @@ users:
   - user_8 | Procyon | The one who comes before the dog. A loyal herald. | It means you don't always have to be the first to arrive.
   - user_9 | Achernar | The end of the river. | Slowing down is realizing that all rivers eventually reach a quiet ocean.
   - user_10 | Betelgeuse | The red giant waiting for its grand finale. | Slowing down is accepting that patience is better than an explosive reaction.
+  - user_11 | test | New member | To slow down is to live.

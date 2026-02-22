@@ -1,5 +1,0 @@
-- name: Betelgeuse
-- who_am_i: The red giant waiting for its grand finale.
-- meaning_of_slowness: Slowing down is accepting that patience is better than an explosive reaction.
-- thoughts:
-- t10, 2026-02-21

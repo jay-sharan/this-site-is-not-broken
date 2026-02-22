@@ -1,6 +1,0 @@
-- name: Rigil Kentaurus
-- who_am_i: A neighbor closely watching from afar.
-- meaning_of_slowness: It means taking the time to notice the subtle orbit of those around you.
-- thoughts:
-- t19_3, 2026-02-19
-- t3, 2026-02-21

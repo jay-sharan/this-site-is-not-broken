@@ -14,7 +14,7 @@ async function commitThoughtToGit(thoughtText) {
     const date = new Date();
     const dateStr = date.toISOString().split('T')[0];
     const timeStr = date.toTimeString().split(' ')[0].substring(0, 5);
-    const filePath = `db/thoughts_${dateStr}.md`;
+    const filePath = `db/thoughts/thoughts_${dateStr}.md`;
     
     const newEntry = `\n- thought: ${thoughtText}\n- thought_id: t_${Date.now()}\n- author_id: ${userId}\n- time: ${timeStr}\n`;
 
@@ -102,9 +102,12 @@ async function performGitCommit(payload) {
 /**
  * Commits a new user to the global authors.md and creates their profile file.
  */
-async function commitUserToGit(username) {
+async function commitUserToGit(username, whoami, slowness) {
     const config = getGitConfig();
     const authorsPath = 'db/authors.md';
+
+    const finalWhoAmI = whoami || "I am a human.";
+    const finalSlowness = slowness || "Managing dopamine rush!";
 
     // 1. Fetch current authors.md publicly
     const getUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${authorsPath}`;
@@ -140,7 +143,7 @@ async function commitUserToGit(username) {
     });
 
     const newUserId = `user_${newCount}`;
-    updatedLines.push(`  - ${newUserId} | ${username} | New member | To slow down is to live.`);
+    updatedLines.push(`  - ${newUserId} | ${username} | ${finalWhoAmI} | ${finalSlowness}`);
 
     const encodedAuthors = btoa(unescape(encodeURIComponent(updatedLines.join('\n'))));
 
@@ -156,7 +159,7 @@ async function commitUserToGit(username) {
 
     // 4. Create user profile file via Relay
     const userFilePath = `db/${newUserId}.md`;
-    const userProfile = `- name: ${username}\n- who_am_i: New member\n- meaning_of_slowness: To slow down is to live.\n- thoughts: []`;
+    const userProfile = `- name: ${username}\n- who_am_i: ${finalWhoAmI}\n- meaning_of_slowness: ${finalSlowness}\n- thoughts: []`;
     
     await performGitCommit({
         path: userFilePath,
@@ -167,4 +170,49 @@ async function commitUserToGit(username) {
     });
 
     return newUserId;
+}
+
+/**
+ * Saves a thought reference to the current user's profile file.
+ */
+async function saveThoughtToProfile(thoughtId, dateStr) {
+    const config = getGitConfig();
+    const userId = getCurrentUser();
+    if (!userId) throw new Error("Must be logged in to save thoughts.");
+
+    const userPath = `db/${userId}.md`;
+
+    // 1. Fetch current profile
+    const getUrl = `https://api.github.com/repos/${config.owner}/${config.repo}/contents/${userPath}`;
+    const response = await fetch(getUrl);
+
+    if (!response.ok) throw new Error("Could not fetch user profile.");
+    
+    const data = await response.json();
+    const content = atob(data.content);
+    const sha = data.sha;
+
+    // 2. Append thought if not already present
+    const thoughtRef = `${thoughtId}, ${dateStr}`;
+    if (content.includes(thoughtId)) {
+        throw new Error("Thought already saved to your profile.");
+    }
+
+    // Very simple append logic - find thoughts: line and append after it
+    // or just append to end of file if it's a list.
+    let updatedContent = content.trim();
+    if (!updatedContent.endsWith('\n')) updatedContent += '\n';
+    updatedContent += `- ${thoughtRef}`;
+
+    const encodedContent = btoa(unescape(encodeURIComponent(updatedContent)));
+
+    // 3. Commit via Relay
+    return await performGitCommit({
+        path: userPath,
+        content: encodedContent,
+        message: `Saved thought ${thoughtId} to profile`,
+        sha: sha,
+        owner: config.owner,
+        repo: config.repo
+    });
 }

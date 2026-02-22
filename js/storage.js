@@ -1,4 +1,5 @@
 // js/storage.js
+// Note:  is dynamically injected during deployment.
 
 const STORAGE_KEY = 'thoughtstream_db';
 

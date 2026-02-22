@@ -15,7 +15,8 @@ const defaultDB = {
         github_auth: {
             token: '',
             owner: 'jay-sharan',
-            repo: 'this-site-is-not-broken'
+            repo: 'this-site-is-not-broken',
+            relay_url: ''
         }
     }
 };

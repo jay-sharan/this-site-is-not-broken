@@ -1,5 +1,5 @@
 // js/storage.js
-// Note:  is dynamically injected during deployment.
+// Note: https://papaya-pixie-ca818e.netlify.app/.netlify/functions/relay is dynamically injected during deployment.
 
 const STORAGE_KEY = 'thoughtstream_db';
 
@@ -17,7 +17,7 @@ const defaultDB = {
             token: '',
             owner: 'jay-sharan',
             repo: 'this-site-is-not-broken',
-            relay_url: ''
+            relay_url: 'https://papaya-pixie-ca818e.netlify.app/.netlify/functions/relay'
         }
     }
 };

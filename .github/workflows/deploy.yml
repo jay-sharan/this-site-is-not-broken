@@ -15,12 +15,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Inject Secret Token
-        run: |
-          # Replace the placeholder with the actual secret
-          # Using a temporary file for safety then moving back
-          sed -i "s/TOKEN_PLACEHOLDER/${{ secrets.PERSISTENCE_TOKEN }}/g" js/storage.js
-
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

@@ -13,7 +13,7 @@ const defaultDB = {
     preferences: {
         theme: 'no-style',
         github_auth: {
-            token: 'TOKEN_PLACEHOLDER',
+            token: '',
             owner: 'jay-sharan',
             repo: 'this-site-is-not-broken'
         }

@@ -6,17 +6,23 @@
 function initAuthUI() {
     const authContent = document.getElementById('sidebar-auth-content');
     const loginPlaceholder = document.getElementById('sidebar-login-placeholder');
-    
-    if (!authContent || !loginPlaceholder) return;
 
     const user = getCurrentUser();
-
+    const myHomeContainer = document.getElementById('my-home-container');
+    const myHomeLink = document.getElementById('my-home-link');
+    
     if (user) {
-        authContent.style.display = 'block';
-        loginPlaceholder.style.display = 'none';
+        if (authContent) authContent.style.display = 'block';
+        if (loginPlaceholder) loginPlaceholder.style.display = 'none';
+        
+        if (myHomeContainer && myHomeLink) {
+            myHomeContainer.style.display = 'inline';
+            myHomeLink.href = `/author.html?id=${user}`;
+        }
     } else {
-        authContent.style.display = 'none';
-        loginPlaceholder.style.display = 'block';
+        if (authContent) authContent.style.display = 'none';
+        if (loginPlaceholder) loginPlaceholder.style.display = 'block';
+        if (myHomeContainer) myHomeContainer.style.display = 'none';
         setupAuthForms();
     }
 }
@@ -90,10 +96,12 @@ function setupAuthForms() {
     if (regBtn) {
         regBtn.addEventListener('click', async () => {
             const username = document.getElementById('reg-username').value.trim();
+            const whoami = document.getElementById('reg-whoami').value.trim();
+            const slowness = document.getElementById('reg-slowness').value.trim();
             const pin = document.getElementById('reg-pin').value.trim();
             
             if (!username || !pin) {
-                alert("Please fill in all fields.");
+                alert("Please fill in at least Username and PIN.");
                 return;
             }
             
@@ -102,8 +110,8 @@ function setupAuthForms() {
                 return;
             }
             
-            if (pin.length > 6) {
-                alert("PIN must be max 6 characters.");
+            if (pin.length < 10) {
+                alert("PIN/Phrase must be at least 10 characters so you don't forget it.");
                 return;
             }
 
@@ -112,7 +120,7 @@ function setupAuthForms() {
 
             try {
                 // 1. Sync to Public Database (GitHub)
-                const newUserId = await commitUserToGit(username);
+                const newUserId = await commitUserToGit(username, whoami, slowness);
                 
                 // 2. Save locally for PIN verification
                 registerUserSync(newUserId, username, pin);

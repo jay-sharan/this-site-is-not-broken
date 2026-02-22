@@ -38,7 +38,7 @@ async function fetchAuthors() {
 // Fetch and parse db/thoughts_<date>.md
 async function fetchThoughts(dateStr) {
     try {
-        const response = await fetch(`db/thoughts_${dateStr}.md`);
+        const response = await fetch(`db/thoughts/thoughts_${dateStr}.md`);
         if (!response.ok) return [];
         const text = await response.text();
         

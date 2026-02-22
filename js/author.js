@@ -91,80 +91,127 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     const authorDetailsInfo = document.getElementById('author-details-info');
-    
+    const profileTabs = document.getElementById('profile-tabs');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    let currentTab = 'thoughts'; // Default
+
     if (userId === getCurrentUser()) {
+        if (profileTabs) profileTabs.style.display = 'block';
         if (authorDetailsInfo) authorDetailsInfo.style.display = 'none';
+        currentTab = 'drafts'; // Start with drafts for self
     } else {
         if (nameEl) nameEl.textContent = user.name;
         if (whoAmIEl) whoAmIEl.innerHTML = `<i>"${user.whoAmI}"</i>`;
         if (slownessEl) slownessEl.innerHTML = `Slow down: ${user.meaningOfSlowness}`;
     }
-    
-    if (thoughtsContainer) {
-        thoughtsContainer.innerHTML = '';
 
-        // Added: My Drafts section for the logged-in user
-        if (userId === getCurrentUser()) {
-            const drafts = getLocalThoughts();
-            if (drafts.length > 0) {
-                const draftsHeader = document.createElement('h2');
-                draftsHeader.textContent = 'My Drafts (Saved for Later)';
-                thoughtsContainer.appendChild(draftsHeader);
+    async function renderProfileContent() {
+        if (!thoughtsContainer) return;
+        thoughtsContainer.innerHTML = '<p>Loading...</p>';
 
-                drafts.forEach(draft => {
-                    const card = document.createElement('div');
-                    card.className = 'thought-card';
-                    card.style.borderLeft = '4px solid #ccc';
-                    card.style.paddingLeft = '15px';
-                    card.style.marginBottom = '20px';
-                    card.innerHTML = `
-                        <p>${draft.thought}</p>
-                        <div class="meta">
-                            Saved locally on ${new Date(draft.id).toLocaleString()}
-                        </div>
-                        <hr>
-                    `;
-                    thoughtsContainer.appendChild(card);
-                });
-
-                const historyHeader = document.createElement('h2');
-                historyHeader.textContent = 'Thought History';
-                thoughtsContainer.appendChild(historyHeader);
-            }
+        if (currentTab === 'drafts') {
+            renderDrafts();
+        } else if (currentTab === 'saved') {
+            await renderHistory(true); // show only others' thoughts I saved
+        } else {
+            await renderHistory(false); // show only my thoughts
         }
-        
-        if (!user.thoughts || user.thoughts.length === 0) {
-            thoughtsContainer.innerHTML = '<p class="no-data">No thoughts recorded yet.</p>';
+    }
+
+    function renderDrafts() {
+        thoughtsContainer.innerHTML = '';
+        const drafts = getLocalThoughts();
+        if (drafts.length === 0) {
+            thoughtsContainer.innerHTML = '<p class="no-data">No drafts saved locally.</p>';
             return;
         }
-        
-        // Render the history by asynchronously fetching each day's log
-        for (const record of user.thoughts) {
+        drafts.forEach(draft => {
             const card = document.createElement('div');
             card.className = 'thought-card';
-            card.innerHTML = `<p class="meta">Loading thought ${record.id} from ${record.date}...</p>`;
+            card.style.borderLeft = '4px solid #ccc';
+            card.innerHTML = `
+                <p>${draft.thought}</p>
+                <div class="meta">
+                    Saved locally on ${new Date(draft.id).toLocaleString()}
+                </div>
+                <hr>
+            `;
             thoughtsContainer.appendChild(card);
-            
-            // Fetch the global thought file for that date
+        });
+    }
+
+    async function renderHistory(onlySaved) {
+        thoughtsContainer.innerHTML = '';
+        
+        if (!user.thoughts || user.thoughts.length === 0) {
+            thoughtsContainer.innerHTML = '<p class="no-data">No history found.</p>';
+            return;
+        }
+
+        let count = 0;
+        for (const record of user.thoughts) {
             const dayThoughts = await fetchThoughts(record.date);
             const specificThought = dayThoughts.find(t => t.id === record.id);
             
             if (specificThought) {
+                const isMine = (specificThought.author_id === userId);
+                
+                // Filtering logic
+                if (onlySaved && isMine) continue;
+                if (!onlySaved && !isMine && userId === getCurrentUser()) continue;
+
+                count++;
+                const loggedInUser = getCurrentUser();
+                const showSave = loggedInUser && (loggedInUser !== specificThought.author_id);
+                const authorInfo = authorsMap[specificThought.author_id] || { name: user.name, whoAmI: user.whoAmI };
+
+                const card = document.createElement('div');
+                card.className = 'thought-card';
                 card.innerHTML = `
                     <p>${specificThought.thought}</p>
                     <div class="meta">
-                        Posted on ${record.date} at ${specificThought.time || 'unknown'}
+                        ${record.date} at ${specificThought.time || 'unknown'}, 
+                        ${showSave ? `<a href="#" class="save-thought-link" data-id="${specificThought.id}" data-date="${record.date}">Save</a> · ` : ''}
+                    </div>
+                    <br>
+                    <div class="meta">
+                        <a href="/author.html?id=${specificThought.author_id}">${authorInfo.name}</a>, <i>${authorInfo.whoAmI}</i>
                     </div>
                     <hr>
                 `;
-            } else {
-                card.innerHTML = `
-                    <div class="meta">
-                        <b>${record.date}</b>
-                    </div>
-                    <p class="no-data">Thought content not found.</p>
-                `;
+                thoughtsContainer.appendChild(card);
+
+                const saveLink = card.querySelector('.save-thought-link');
+                if (saveLink) {
+                    saveLink.addEventListener('click', async (e) => {
+                        e.preventDefault();
+                        const originalText = e.target.textContent;
+                        e.target.textContent = 'Saving...';
+                        try {
+                            await saveThoughtToProfile(specificThought.id, record.date);
+                            e.target.textContent = 'Saved';
+                        } catch (err) {
+                            alert(err.message);
+                            e.target.textContent = originalText;
+                        }
+                    });
+                }
             }
         }
+
+        if (count === 0) {
+            thoughtsContainer.innerHTML = `<p class="no-data">Nothing here yet.</p>`;
+        }
     }
+
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTab = btn.getAttribute('data-tab');
+            renderProfileContent();
+        });
+    });
+
+    renderProfileContent();
 });

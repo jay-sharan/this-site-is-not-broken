@@ -1,7 +1,0 @@
-- name: Sirius
-- who_am_i: The brightest star in the night sky. I shine steady.
-- meaning_of_slowness: Slowing down is not burning out before my time.
-- thoughts:
-- t19_1, 2026-02-19
-- t20_1, 2026-02-20
-- t1, 2026-02-21

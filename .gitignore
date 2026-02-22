@@ -137,3 +137,9 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Mock data and generation scripts
+generate_*.py
+mock_*.py
+data_generator.py
+scripts/generate_*.py

@@ -13,7 +13,7 @@
   <div class="app-shell">
     <header class="app-header">
       <h1>This site is not broken</h1>
-      <h3>Slow down. Think. Write.</h3>
+      <h3>No Likes. No share. No replies. No notifications. Slow down.</h3>
       <hr>
     </header>
 
@@ -36,8 +36,17 @@
               <!-- Display Tab -->
               <div id="tab-display" class="tab-content" style="display: block;">
                 <h3>Display Configuration</h3>
-                <p>The system is currently running in <b>No-Style</b> default mode.</p>
-                <p>All theme overrides have been removed to prioritize browser-native rendering.</p>
+                <p>Select a theme to customize your experience.</p>
+                <div class="card" style="padding: 15px; margin-bottom: 20px;">
+                  <label for="theme-selector" style="display: block; margin-bottom: 10px; font-size: 0.9em;">Active
+                    Theme:</label>
+                  <select id="theme-selector" style="width: 100%; padding: 8px;">
+                    <option value="no-style">No-Style (Browser Default)</option>
+                    <option value="bw">Black and White (Inverted)</option>
+                  </select>
+                </div>
+                <p style="font-size: 0.8em; color: #666;">Themes only change visuals. The core layout and minimalist
+                  philosophy remain identical.</p>
               </div>
 
               <!-- System Tab -->
@@ -105,12 +114,17 @@
     </main>
 
     <footer class="app-footer">
-      <div>A purely transparent space. No tracking. No algorithms.</div>
-      <div><a href="/settings.html">Settings</a></div>
+      <div>No tracking. No algorithm. No analytics. No cookies. | Version: 1.0.0</div>
+      <div>
+        <a href="/">Home</a> ·
+        <span id="my-home-container" style="display: none;"><a href="#" id="my-home-link">My home</a> · </span>
+        <a href="/settings.html">Settings</a>
+      </div>
     </footer>
   </div>
 
   <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
   <script>
     // Simplified Tab switching logic
     const tabs = document.querySelectorAll('.tab');

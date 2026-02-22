@@ -17,9 +17,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const clearBtn = document.getElementById('clear-btn');
     const saveLaterBtn = document.getElementById('save-later-btn');
 
-    // Mock available dates for testing
-    const availableDates = ['2026-02-19', '2026-02-20', '2026-02-21'];
-    let currentDateIndex = availableDates.length - 1; // Default to latest
+    // Dynamic 7-day window based on "today" (2026-02-22 for testing)
+    function generateLast7Days() {
+        const days = [];
+        const base = new Date('2026-02-22');
+        for (let i = 6; i >= 0; i--) {
+            const d = new Date(base);
+            d.setDate(base.getDate() - i);
+            days.push(d.toISOString().split('T')[0]);
+        }
+        return days;
+    }
+    
+    const availableDates = generateLast7Days();
+    let currentDateIndex = availableDates.length - 1; // Default to latest (Today)
 
     // Fetch authors map once
     const authorsMap = await fetchAuthors();
@@ -63,26 +74,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         thoughts.forEach(t => {
             const authorInfo = authorsMap[t.author_id] || { name: 'Anonymous', whoAmI: '' };
+            const isLoggedIn = !!getCurrentUser();
             const card = document.createElement('div');
             card.className = 'thought-card';
             card.innerHTML = `
                 <p>${t.thought}</p>
                 <div class="meta">
-                    <b><a href="/author.html?id=${t.author_id}">${authorInfo.name}</a></b>, <i>${authorInfo.whoAmI}</i>
+                ${dateStr} at ${t.time || 'unknown'}, 
+                    ${isLoggedIn ? `<a href="#" class="save-thought-link" data-id="${t.id}" data-date="${dateStr}">Save</a> · ` : ''}
                 </div>
+                <br>
                 <div class="meta">
-                    Posted on ${dateStr} at ${t.time || 'unknown'}
+                    <a href="/author.html?id=${t.author_id}">${authorInfo.name}</a>, <i>${authorInfo.whoAmI}</i>
                 </div>
                 <hr>
             `;
+            
+            // Add click listener for Save if it exists
+            const saveLink = card.querySelector('.save-thought-link');
+            if (saveLink) {
+                saveLink.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    const tid = e.target.getAttribute('data-id');
+                    const tdate = e.target.getAttribute('data-date');
+                    
+                    const originalText = e.target.textContent;
+                    e.target.textContent = 'Saving...';
+                    e.target.style.pointerEvents = 'none';
+
+                    try {
+                        await saveThoughtToProfile(tid, tdate);
+                        e.target.textContent = 'Saved';
+                        alert("Thought saved to your profile!");
+                    } catch (err) {
+                        alert(`Save failed: ${err.message}`);
+                        e.target.textContent = originalText;
+                        e.target.style.pointerEvents = 'auto';
+                    }
+                });
+            }
+
             feedContainer.appendChild(card);
         });
 
         // Update button states
         if (prevBtn && nextBtn) {
-            prevBtn.disabled = index === 0;
+            // prevBtn is never disabled, we show alert instead for UX reasons
             nextBtn.disabled = index === availableDates.length - 1;
-            prevBtn.style.opacity = prevBtn.disabled ? '0.5' : '1';
             nextBtn.style.opacity = nextBtn.disabled ? '0.5' : '1';
         }
     }
@@ -137,6 +175,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (currentDateIndex > 0) {
                 currentDateIndex--;
                 renderFeed(currentDateIndex);
+            } else {
+                alert("if you want to view past data, visit github.com and full path.");
             }
         });
     }

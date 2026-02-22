@@ -5,12 +5,7 @@ const STORAGE_KEY = 'thoughtstream_db';
 
 const defaultDB = {
     thoughts: [],
-    currentUser: {
-        id: 'user_1',
-        username: 'Sirius',
-        pin: '1234',
-        isLoggedIn: true
-    },
+    currentUser: null,
     preferences: {
         theme: 'no-style',
         github_auth: {
@@ -171,4 +166,3 @@ function loginUser(usernameOrId, pin) {
     }
     return false;
 }
-

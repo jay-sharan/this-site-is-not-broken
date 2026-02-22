@@ -38,7 +38,19 @@ function getDB() {
             db.currentUser = defaultDB.currentUser;
         }
         if (!db.thoughts) db.thoughts = defaultDB.thoughts;
-        if (!db.preferences) db.preferences = defaultDB.preferences;
+        if (!db.preferences) {
+            db.preferences = defaultDB.preferences;
+        } else {
+            // Ensure nested github_auth exists
+            if (!db.preferences.github_auth) {
+                db.preferences.github_auth = defaultDB.preferences.github_auth;
+            } else {
+                // Ensure relay_url exists within github_auth
+                if (db.preferences.github_auth.relay_url === undefined) {
+                    db.preferences.github_auth.relay_url = defaultDB.preferences.github_auth.relay_url;
+                }
+            }
+        }
         return db;
     } catch (e) {
         console.error("Error parsing storage:", e);

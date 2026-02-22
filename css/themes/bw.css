@@ -1,0 +1,73 @@
+/* css/themes/bw.css */
+
+:root {
+  --app-bg: #000;
+  --app-text: #fff;
+  --card-bg: #000;
+  --card-text: #fff;
+  --btn-bg: #fff;
+  --btn-text: #000;
+  --header-bg: #000;
+  --header-text: #fff;
+  --footer-bg: #000;
+  --footer-text: #fff;
+}
+
+body {
+  background-color: var(--app-bg);
+  color: var(--app-text);
+}
+
+/* Links in BW theme */
+a {
+  color: #aaa;
+}
+
+a:hover {
+  color: #fff;
+}
+
+/* Buttons */
+button,
+.btn {
+  background-color: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+  border: 1px solid #fff !important;
+}
+
+/* Inputs */
+input,
+textarea,
+select {
+  background-color: #222 !important;
+  color: #fff !important;
+  border: 1px solid #555 !important;
+}
+
+/* Dividers */
+hr {
+  border: 0;
+  border-top: 1px solid #333;
+}
+
+/* Thought Cards */
+.thought-card {
+  border-bottom: 1px solid #333;
+}
+
+/* Meta text */
+.meta {
+  color: #888;
+}
+
+/* Tab buttons */
+.tab-btn {
+  background: transparent !important;
+  color: #888 !important;
+  border: none !important;
+}
+
+.tab-btn.active {
+  color: #fff !important;
+  border-bottom: 2px solid #fff !important;
+}

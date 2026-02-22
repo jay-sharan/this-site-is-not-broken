@@ -1,0 +1,6 @@
+- name: Arcturus
+- who_am_i: The bear watcher. Guardian of the northern herds.
+- meaning_of_slowness: To slow down is to breathe deeply and let the universe unfold at its own pace.
+- thoughts:
+- t20_1, 2026-02-20
+- t4, 2026-02-21

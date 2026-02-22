@@ -15,6 +15,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Inject Configuration
+        run: |
+          sed -i "s|RELAY_URL_PLACEHOLDER|${{ secrets.RELAY_URL }}|g" js/storage.js
+
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

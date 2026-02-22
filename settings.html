@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Settings - ThoughtStream</title>
-  <link rel="stylesheet" href="/css/style.css">
-  <script src="/js/theme.js"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/theme.js"></script>
 </head>
 
 <body>
@@ -53,7 +53,29 @@
                 <div class="card" style="margin-bottom: 20px; padding: 10px;">
                   <p><b>Persistence Layer</b><br>
                     Type: GitHub Public Sync<br>
-                    Auth: Managed by GitHub Actions</p>
+                    Auth: <span id="sync-status-text">Disconnected</span></p>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; padding: 15px;">
+                  <h4>Git Sync Configuration</h4>
+                  <p style="font-size: 0.8em; color: #666; margin-bottom: 10px;">Enter your GitHub PAT to enable public
+                    syncing. This stays only in your browser.</p>
+                  <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label style="font-size: 0.8em;">GitHub Token:
+                      <input type="password" id="git-token" placeholder="ghp_..." style="width: 100%;">
+                    </label>
+                    <div style="display: flex; gap: 10px;">
+                      <label style="font-size: 0.8em; flex: 1;">Owner:
+                        <input type="text" id="git-owner" placeholder="Username" style="width: 100%;">
+                      </label>
+                      <label style="font-size: 0.8em; flex: 1;">Repo:
+                        <input type="text" id="git-repo" placeholder="Repo Name" style="width: 100%;">
+                      </label>
+                    </div>
+                    <button class="btn" id="save-git-config-btn">Save Sync Settings</button>
+                    <p id="save-status" style="font-size: 0.8em; text-align: right; display: none; color: green;">Saved!
+                    </p>
+                  </div>
                 </div>
 
                 <p><b>Network Statistics</b><br>
@@ -88,7 +110,7 @@
     </footer>
   </div>
 
-  <script src="/js/storage.js"></script>
+  <script src="js/storage.js"></script>
   <script>
     // Simplified Tab switching logic
     const tabs = document.querySelectorAll('.tab');
@@ -103,6 +125,38 @@
         const targetId = tab.getAttribute('data-target');
         document.getElementById(targetId).style.display = 'block';
       });
+    });
+
+    // Git Sync Logic
+    const config = getGitConfig();
+    const tokenInput = document.getElementById('git-token');
+    const ownerInput = document.getElementById('git-owner');
+    const repoInput = document.getElementById('git-repo');
+    const syncStatusText = document.getElementById('sync-status-text');
+    const saveBtn = document.getElementById('save-git-config-btn');
+    const saveStatus = document.getElementById('save-status');
+
+    if (config) {
+      tokenInput.value = config.token || '';
+      ownerInput.value = config.owner || 'jay-sharan';
+      repoInput.value = config.repo || 'this-site-is-not-broken';
+      syncStatusText.textContent = config.token ? 'Connected' : 'Disconnected';
+      if (config.token) syncStatusText.style.color = 'green';
+    }
+
+    saveBtn.addEventListener('click', () => {
+      const newConfig = {
+        token: tokenInput.value.trim(),
+        owner: ownerInput.value.trim(),
+        repo: repoInput.value.trim()
+      };
+      updateGitConfig(newConfig);
+
+      syncStatusText.textContent = newConfig.token ? 'Connected' : 'Disconnected';
+      syncStatusText.style.color = newConfig.token ? 'green' : 'inherit';
+
+      saveStatus.style.display = 'block';
+      setTimeout(() => { saveStatus.style.display = 'none'; }, 2000);
     });
 
   </script>

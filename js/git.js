@@ -53,11 +53,14 @@ async function commitThoughtToGit(thoughtText) {
 async function performGitCommit(payload) {
     const config = getGitConfig();
     
-    // Check if we have a Relay configured or use the local Netlify path
-    const relayUrl = config.relay_url || "/.netlify/functions/relay";
+    // Check if we have a Relay configured
+    let relayUrl = config.relay_url;
+    
+    // If it's missing or still the placeholder, we can't sync
+    if (!relayUrl || relayUrl === 'RELAY_URL_PLACEHOLDER') {
+        throw new Error("Relay URL not configured. Please ensure RELAY_URL secret is set in GitHub Actions.");
+    }
 
-    // If we have a local token, we *could* use direct API, 
-    // but the Relay is safer for the "Anyone can post" goal.
     try {
         const response = await fetch(relayUrl, {
             method: 'POST',
